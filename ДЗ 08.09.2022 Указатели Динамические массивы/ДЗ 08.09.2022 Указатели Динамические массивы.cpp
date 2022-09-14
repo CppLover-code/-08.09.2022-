@@ -6,16 +6,25 @@ int* make_arr(size_t n);
 void fill_random(int* arr, size_t length);
 void print_arr(int* arr, size_t length);
 void elements_ar1(int* ar1, int* ar2, int* ar3, size_t m, size_t n, int* px);
-void show_elements_ar1(int* ar3, size_t p);
+void copy_ar(int* ar3, int* ar4, size_t p, int* cx);
+void result_clean(int* ar3, int* ar4, int* ar5, size_t p, size_t c, int* dx);
+void show_result(int* ar5, size_t d);
+void del_arr(int* ar, size_t n);
 
 int main()
 {
     srand(time(0));
 
-    int m, n;
+    int m, n; // 1-2 ar size
 
-    int p = 0;
+    int p = 0;// 3 ar size
     int* px = &p;
+
+    int c = 0;// 4 ar size
+    int* cx = &c;
+
+    int d = 0;// 5 ar size
+    int* dx = &d;
 
     cout << "Enter the size of 1 dynamic array:\n";
     cin >> m;
@@ -24,11 +33,15 @@ int main()
 
     int* ar1 = nullptr;
     int* ar2 = nullptr;
-    int* ar3 = nullptr; // первый массив с результатами
+    int* ar3 = nullptr; // первый массив результатов с повторяющимися элементами
+    int* ar4 = nullptr; // копия 3 массива
+    int* ar5 = nullptr; // результат в новом массиве без повторений
 
     ar1 = make_arr(m);
     ar2 = make_arr(n);
     ar3 = make_arr(p); 
+    ar4 = make_arr(c);
+    ar5 = make_arr(d);
 
     fill_random(ar1, m); 
     fill_random(ar2, n);
@@ -38,9 +51,22 @@ int main()
     cout << "\n\t2 dynamic array:\n\n";
     print_arr(ar2, n);
 
-    elements_ar1(ar1, ar2,ar3, m, n, px);
-    show_elements_ar1(ar3, p);
-    
+    elements_ar1(ar1, ar2, ar3, m, n, px);
+    copy_ar(ar3, ar4, p, cx);
+    result_clean(ar3, ar4, ar5, p, c, dx);
+    show_result(ar5, d);  
+
+    del_arr(ar1, m);
+    del_arr(ar2, n);
+    /*
+    При попытке освободить память в окне консоли появляется ошибка, связанная с памятью.
+    Не удается освобожить память 3 динамических массивов.
+    */
+    //del_arr(ar3, p);
+    //del_arr(ar4, c);
+    //del_arr(ar5, d);
+   
+    return 0;
 }
 
 int* make_arr(size_t n) 
@@ -61,7 +87,7 @@ void fill_random(int* arr, size_t length)
     }
     for (size_t i = 0; i < length; i++) 
     {
-        arr[i] = rand() % 20 + 1;
+        arr[i] = rand() % 10 + 1;
     }
 }
 
@@ -79,14 +105,13 @@ void print_arr(int* arr, size_t length)
     cout << "\n";
 }
 
-
 void elements_ar1(int* ar1, int* ar2, int* ar3, size_t m, size_t n, int *px)
 {
     int same = 0;
 
-    for (size_t i = 0; i < m; i++)// mas 1
+    for (size_t i = 0; i < m; i++)//  1 ar
     {
-        for (size_t y = 0; y < n; y++) // mas 2
+        for (size_t y = 0; y < n; y++) // 2 ar
         {
             if (ar2[y] == ar1[i]) same++;
         }
@@ -99,12 +124,59 @@ void elements_ar1(int* ar1, int* ar2, int* ar3, size_t m, size_t n, int *px)
     }
 }
 
-void show_elements_ar1(int* ar3, size_t p)
+void copy_ar(int* ar3, int* ar4, size_t p, int* cx)
 {
-    cout << "\n Elements 1 array that are not present in the second:\n";
     for (size_t i = 0; i < p; i++)
     {
-        cout << ar3[i] << ' ';
+        ar4[*cx] = ar3[i];
+        *cx = *cx + 1;
+    }
+}
+
+void result_clean(int* ar3, int* ar4, int* ar5, size_t p, size_t c, int* dx)
+{
+    int l = p - 1;
+    for (size_t i = 0; i < p; i++)
+    {
+        int w = 0;
+
+        for (size_t y = i + 1; y < c; y++)
+        {
+            if (ar3[i] != ar4[y])
+            {
+                w++;
+            }
+            else
+            {
+                l--;
+                w = 0;
+                break;
+            }
+        }
+        if (w == l)
+        {
+            ar5[*dx] = ar3[i];
+            *dx = *dx + 1;
+            l = l - 1;
+        }
+    }
+}
+
+void show_result(int* ar5, size_t d)
+{
+    cout << "\n Elements 1 array that are not present in the second:\n\n";
+    for (size_t i = 0; i < d; i++)
+    {
+        cout << ar5[i] << ' ';
     }
     cout << "\n";
+}
+
+void del_arr(int* ar, size_t n)
+{
+    for (int y = 0; y < n; y++)
+    {
+        ar[y] = NULL;
+    }
+    delete[] ar;
 }
