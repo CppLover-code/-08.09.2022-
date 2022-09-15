@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿//Первое задание
+#include <iostream>
 #include <ctime>
 using namespace std;
 
@@ -177,7 +178,7 @@ void del_arr(int* ar, size_t n)
     delete[] ar;
 }
 
-
+////Второе задание
 //#include <iostream>
 //#include <ctime>
 //using namespace std;
